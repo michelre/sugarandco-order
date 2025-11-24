@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>{% block title %}Sugar&Co — Order app{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <img src="{% static 'images/logo.png' %}" alt="Sugar&Co Logo">
+        <h1> Orders</h1>
+    </header>
+    <main>
+        {% block content %}
+        
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2025 Sugar&Co</p>
+    </footer>
+</body>
+</html>

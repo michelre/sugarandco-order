@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Create Order</h1>
+  <a href="{% url 'order:home' %}">Back to Home</a>
+  <h2>Next Order Number: {{ next_order_number }}</h2>
+  <form action="{% url 'order:create' %}" method="post">
+    {% csrf_token %}
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>    
+
+    <div>
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" required>
+    </div>
+
+    <div>
+      <label for="comments">Comments:</label>
+      <textarea id="comments" name="comments"></textarea>
+    </div>
+
+    <div>
+      <label for="products">Products:</label>
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+            <tr>
+              <td>{{ product.name }}</td>
+              <td>{{ product.price }}</td>
+              <td>
+                <input type="number" name="quantity_{{ product.id }}" min="0" value="0">
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <label for="deposit_amount">Deposit:</label>
+      <input type="number" id="deposit_amount" name="deposit_amount" value="10" required>
+    </div>
+
+    <div>
+      <label for="delivery_date">Delivery Date:</label>
+      <input type="date" id="delivery_date" name="delivery_date" value="2025-12-24" required>
+    </div>
+
+    <button type="submit">Create Order</button>
+  </form>
+{% endblock %}

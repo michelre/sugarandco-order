@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Order Summary</h1>
+  <a href="{% url 'order:home' %}">Back to Home</a>
+  <section>
+  <h2>Orders</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Comments</th>
+        <th>Deposit Amount</th>
+        <th>Rest to Pay</th>
+        <th>Delivery Date</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.name }}</td>
+          <td>{{ order.phone }}</td>
+          <td>{{ order.comments }}</td>
+          <td>{{ order.deposit_amount }}€</td>          
+          <td>{{ order.delivery_date|date:"d M Y" }}</td>
+          <td>{{ order.rest_to_pay }}€</td>
+          <td>{{ order.total_amount }}€</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="6"><strong>Total:</strong></td>
+        <td><strong>{{ total_rest_to_pay }}€</strong></td>
+        <td><strong>{{ total_amount_orders }}€</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+  </section>
+  <section>
+  <h2>Ordered Products Summary</h2>
+  <table>
+    <thead>
+      <tr>      
+        <th>Product Name</th>
+        <th>Total Quantity</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in ordered_products %}
+        <tr>
+          <td>{{ product.product__name }}</td>
+          <td>{{ product.product_total_quantity }}</td>
+          <td>{{ product.product_total_amount }}€</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><strong>Total:</strong></td>
+        <td><strong>{{ total_products }}</strong></td>
+        <td><strong>{{ ordered_total_price }}€</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+  </section>
+
+  
+{% endblock %}
