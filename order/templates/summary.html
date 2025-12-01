@@ -42,7 +42,7 @@
   </table>
   </section>
   <section>
-  <h2>Ordered Products Summary</h2>
+  <h2>Ordered Products Summary (Buches)</h2>
   <table>
     <thead>
       <tr>      
@@ -52,7 +52,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for product in ordered_products %}
+      {% for product in ordered_products_buche %}
         <tr>
           <td>{{ product.product__name }}</td>
           <td>{{ product.product_total_quantity }}</td>
@@ -63,8 +63,37 @@
     <tfoot>
       <tr>
         <td><strong>Total:</strong></td>
-        <td><strong>{{ total_products }}</strong></td>
-        <td><strong>{{ ordered_total_price }}€</strong></td>
+        <td><strong>{{ buche_totals.total_quantity }}</strong></td>
+        <td><strong>{{ buche_totals.total_amount }}€</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+  </section>
+
+  <section>
+  <h2>Ordered Products Summary (Autre)</h2>
+  <table>
+    <thead>
+      <tr>      
+        <th>Product Name</th>
+        <th>Total Quantity</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in ordered_products_other %}
+        <tr>
+          <td>{{ product.product__name }}</td>
+          <td>{{ product.product_total_quantity }}</td>
+          <td>{{ product.product_total_amount }}€</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><strong>Total:</strong></td>
+        <td><strong>{{ autre_totals.total_quantity }}</strong></td>
+        <td><strong>{{ autre_totals.total_amount }}€</strong></td>
       </tr>
     </tfoot>
   </table>

@@ -64,6 +64,44 @@ class SummaryView(View):
             rest_to_pay=ExpressionWrapper(F('total_amount') - F('deposit_amount'), output_field=DecimalField(max_digits=10, decimal_places=2)),            
         )
 
+        ordered_products_buche = OrderProduct.objects.filter(
+            product__category='buche'
+        ).values('product__name').annotate(
+            product_total_quantity=Sum('quantity'),
+            product_total_amount=Sum(
+            ExpressionWrapper(
+                F('quantity') * F('product__price'),
+                output_field=DecimalField(max_digits=10, decimal_places=2)
+            )
+            ),
+        ).order_by('product__name')
+
+        ordered_products_other = OrderProduct.objects.filter(
+            product__category='autre'
+        ).values('product__name').annotate(
+            product_total_quantity=Sum('quantity'),
+            product_total_amount=Sum(
+            ExpressionWrapper(
+                F('quantity') * F('product__price'),
+                output_field=DecimalField(max_digits=10, decimal_places=2)
+            )
+            ),
+        ).order_by('product__name')
+
+    
+        # Totaux globaux pour la catégorie buche
+        buche_totals = ordered_products_buche.aggregate(
+            total_quantity=Sum('product_total_quantity'),
+            total_amount=Sum('product_total_amount')
+        )
+
+        # Totaux globaux pour la catégorie autre
+        autre_totals = ordered_products_other.aggregate(
+            total_quantity=Sum('product_total_quantity'),
+            total_amount=Sum('product_total_amount')
+        )
+        
+
         ordered_products = OrderProduct.objects.values('product__name').annotate(
             product_total_quantity=Sum('quantity'),
             product_total_amount=Sum(
@@ -79,10 +117,11 @@ class SummaryView(View):
             'summary.html',
             {
                 'orders': orders,
-                'ordered_products': ordered_products,
-                'ordered_total_price': ordered_products.aggregate(Sum('product_total_amount'))['product_total_amount__sum'] or 0,
+                'ordered_products_buche': ordered_products_buche,
+                'buche_totals': buche_totals,
+                'ordered_products_other': ordered_products_other,
+                'autre_totals': autre_totals,                
                 'total_rest_to_pay': orders.aggregate(Sum('rest_to_pay'))['rest_to_pay__sum'] or 0,
-                'total_amount_orders': orders.aggregate(Sum('total_amount'))['total_amount__sum'] or 0,
-                'total_products': ordered_products.aggregate(Sum('product_total_quantity'))['product_total_quantity__sum'] or 0
+                'total_amount_orders': orders.aggregate(Sum('total_amount'))['total_amount__sum'] or 0,                
             }
         )
