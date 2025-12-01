@@ -22,7 +22,7 @@
     </div>
 
     <div class="form-group">
-      <label for="products">Products:</label>
+      <label for="products">Buches:</label>
       <table>
         <thead>
           <tr>
@@ -32,7 +32,31 @@
           </tr>
         </thead>
         <tbody>
-          {% for product in products %}
+          {% for product in buches %}
+            <tr>
+              <td>{{ product.name }}</td>
+              <td>{{ product.price }}</td>
+              <td>
+                <input type="number" name="quantity_{{ product.id }}" min="0" value="">
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-group">
+      <label for="products">Autres:</label>
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in others %}
             <tr>
               <td>{{ product.name }}</td>
               <td>{{ product.price }}</td>

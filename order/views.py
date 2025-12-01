@@ -20,9 +20,10 @@ class HomeView(View):
 class CreateView(View):
     def get(self, request):
         next_order_number = helpers.next_order_number_sqlite()
-        products = Product.objects.all()
-        print(f"Fetched products: {products}")
-        return render(request, 'create.html', {'products': products, 'next_order_number': next_order_number })
+        buches = Product.objects.filter(category='buche')
+        others = Product.objects.filter(category='autre')
+        
+        return render(request, 'create.html', {'buches': buches, 'others': others, 'next_order_number': next_order_number })
 
     def post(self, request):
         # Handle form submission
@@ -39,7 +40,7 @@ class CreateView(View):
             deposit_amount=deposit_amount,
             delivery_date=delivery_date    
         )
-
+        
         products = Product.objects.all()
         total_amount = 0
         for product in products:
@@ -48,14 +49,14 @@ class CreateView(View):
                 OrderProduct.objects.create(
                     order=order,
                     product=product,
-                    quantity=int(quantity)
+                    quantity=int(quantity),
                 )
                 total_amount += product.price * int(quantity)
 
         # Process the data (e.g., save to the database)
         order.total_amount = total_amount
         order.save()
-        return redirect('orderapp:summary')
+        return redirect('order:summary')
 
 @method_decorator(login_required, name='dispatch')
 class SummaryView(View):
