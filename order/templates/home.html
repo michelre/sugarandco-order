@@ -3,8 +3,8 @@
 {% block content %}
   <h2 class="order-number">Next order number: {{ next_order_number }}</h2> 
   <div class="home-buttons">
-    <a href="{% url 'order:create' %}" class="button">Create Order</a>
-    <a href="{% url 'order:summary' %}" class="button">View Orders</a>
+    <a href="{% url 'orderapp:create' %}" class="button">Create Order</a>
+    <a href="{% url 'orderapp:summary' %}" class="button">View Orders</a>
   </div>
   
 {% endblock %}

@@ -44,7 +44,7 @@ class CreateView(View):
         total_amount = 0
         for product in products:
             quantity = request.POST.get(f'quantity_{product.id}')
-            if quantity and int(quantity) > 0:
+            if  quantity and int(quantity) > 0:
                 OrderProduct.objects.create(
                     order=order,
                     product=product,
@@ -55,7 +55,7 @@ class CreateView(View):
         # Process the data (e.g., save to the database)
         order.total_amount = total_amount
         order.save()
-        return redirect('order:summary')
+        return redirect('orderapp:summary')
 
 @method_decorator(login_required, name='dispatch')
 class SummaryView(View):

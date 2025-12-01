@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Order Summary</h1>
-  <a href="{% url 'order:home' %}">Back to Home</a>
+  <a href="{% url 'orderapp:home' %}">Back to Home</a>
   <section>
   <h2>Orders</h2>
   <table>
@@ -12,9 +12,9 @@
         <th>Name</th>
         <th>Phone</th>
         <th>Comments</th>
-        <th>Deposit Amount</th>
-        <th>Rest to Pay</th>
+        <th>Deposit Amount</th>        
         <th>Delivery Date</th>
+        <th>Rest to Pay</th>
         <th>Total Amount</th>
       </tr>
     </thead>
