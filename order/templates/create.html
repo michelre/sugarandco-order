@@ -2,9 +2,9 @@
 
 {% block content %}
   <h1>Create Order</h1>
-  <a href="{% url 'orderapp:home' %}">Back to Home</a>
+  <a href="{% url 'order:home' %}">Back to Home</a>
   <h2>Next Order Number: {{ next_order_number }}</h2>
-  <form action="{% url 'orderapp:create' %}" method="post">
+  <form action="{% url 'order:create' %}" method="post">
     {% csrf_token %}
     <div class="form-group">
       <label for="name">Name:</label>

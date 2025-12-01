@@ -22,5 +22,5 @@ app_name = 'orderapp'
 urlpatterns = [
     path('', include('order.urls')),
     path('admin/', admin.site.urls),
-    path('auth/', include('authentication.urls')),    
+    path('auth/', include('authentication.urls')),
 ]

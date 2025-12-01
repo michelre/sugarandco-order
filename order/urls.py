@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import HomeView, CreateView, SummaryView
 
-app_name = 'orderapp'
+app_name = 'order'
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
