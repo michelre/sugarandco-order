@@ -21,7 +21,11 @@
     <tbody>
       {% for order in orders %}
         <tr>
-          <td>{{ order.id }}</td>
+          <td>
+            <a href="{% url 'order:detail' order.id %}" class="link">
+              {{ order.id }}
+            </a>
+          </td>
           <td>{{ order.name }}</td>
           <td>{{ order.phone }}</td>
           <td>{{ order.comments }}</td>

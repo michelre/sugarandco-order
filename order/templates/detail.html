@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Order details</h1>
+  <a href="{% url 'order:summary' %}" class="link">Go back to summary</a>
+  <section>
+    <h2>Order Information</h2>
+    <ul class="order-info">
+        <li class="order-info-item"><strong>Number:</strong> {{ order.id }}</li>
+        <li class="order-info-item"><strong>Name:</strong> {{ order.name }}</li>
+        <li class="order-info-item"><strong>Phone:</strong> <a href="tel:{{ order.phone }}">{{ order.phone }}</a></li>
+        <li class="order-info-item"><strong>Comments:</strong> {{ order.comments }}</li>
+        <li class="order-info-item"><strong>Delivery date:</strong> {{ order.delivery_date | date:"d M Y" }}</li>
+    </ul>
+
+    <h2>Ordered Products:</h2>
+    <ul class="ordered-products">
+      {% for product in ordered_products %}
+        <li class="ordered-product-item">
+            <b>{{ product.product.name }}</b> - Quantity: {{ product.quantity }}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h2>Total</h2>
+    <ul class="order-totals">
+        <li class="order-info-item"><strong>Total Price:</strong> {{ order.total_amount }}€</li>
+        <li class="order-rest order-info-item"><strong>Rest to pay:</strong> {{ order.get_rest_to_pay }}€</li>
+
+    </ul>
+  </section>
+{% endblock %}

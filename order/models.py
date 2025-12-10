@@ -17,6 +17,9 @@ class Order(models.Model):
     def __str__(self):
         return self.name
 
+    def get_rest_to_pay(self):
+        return self.total_amount - self.deposit_amount
+
 class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)

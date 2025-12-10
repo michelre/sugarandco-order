@@ -16,6 +16,13 @@ class HomeView(View):
 
         return render(request, 'home.html', {'next_order_number': next_order_number})
 
+class DetailView(View):
+    def get(self, request, order_id):
+        order = Order.objects.get(id=order_id)
+        ordered_products = OrderProduct.objects.filter(order=order)
+
+        return render(request, 'detail.html', {'order': order, 'ordered_products': ordered_products })
+
 @method_decorator(login_required, name='dispatch')
 class CreateView(View):
     def get(self, request):
