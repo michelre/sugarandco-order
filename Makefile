@@ -7,6 +7,12 @@ RSYNC = rsync -avz --delete --progress \
 	--exclude 'venv' \
 	--exclude 'Makefile.server' \
 	--exclude 'db.sqlite3' \
+	--exclude '.git' \
+	--exclude '__pycache__' \
+	--exclude '.pytest_cache' \
+	--exclude '*.pyc' \
+	--exclude '.env' \
+	--exclude 'orderapp/settings.py' \
 	-e "ssh"
 
 deploy:
