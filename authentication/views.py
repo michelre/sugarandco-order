@@ -23,5 +23,5 @@ class LoginView(View):
             )
             if user is not None:
                 login(request, user)
-                return redirect('orderapp:home')
+                return redirect('order:home')
         return render(request, 'login.html', {'form': form})
