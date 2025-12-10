@@ -10,6 +10,12 @@ body {
     margin: 0;
 }
 
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 12px;
+}
+
 
 /* Table header slightly more opaque for contrast */
 th {
@@ -57,19 +63,19 @@ textarea {
     border: 1px solid rgba(69,27,28,0.25) !important;
 }
 
-header, footer {
+.header, footer {
     background-color: #f8f8f8;
     padding: 10px 0;
     text-align: center;    
     border-bottom: 1px solid #ddd;
 }
 
-header {
+.header .container {
     display: grid;
     grid-template-columns: auto 1fr;
 }
 
-header h1 {
+.header h1 {
     text-align: center;
 }
 header img {
@@ -148,6 +154,7 @@ input[type=date] {
 a.button{    
     display: block;
     padding: 10px 20px;
+    box-sizing: border-box;
     background: var(--bg-rgba);
     color: var(--primary);
     border: none;
@@ -162,4 +169,35 @@ a.button{
 
 .form-group {
     margin-bottom: 15px;
+}
+
+/* Order details */
+
+.ordered-products {
+    list-style: none;
+    padding: 0;
+}
+
+.ordered-product-item {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.ordered-product-item:last-child {
+    border-bottom: none;
+}
+
+.order-info-item {
+    margin-bottom: 8px; 
+}
+
+.order-rest {
+    color: red;
+    font-size: 1.2rem;
+}
+
+.link {
+    display: block;
+    width: 100%;
+    font-size: 1.2rem;
 }
