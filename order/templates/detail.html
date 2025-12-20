@@ -24,9 +24,28 @@
 
     <h2>Total</h2>
     <ul class="order-totals">
-        <li class="order-info-item"><strong>Total Price:</strong> {{ order.total_amount }}€</li>
-        <li class="order-rest order-info-item"><strong>Rest to pay:</strong> {{ order.get_rest_to_pay }}€</li>
+        <li class="order-info-item"><strong>Total Price:</strong> {{ order.total_amount | floatformat:2 }}€</li>
+        <li class="order-rest order-info-item"><strong>Rest to pay:</strong> {{ order.get_rest_to_pay | floatformat:2 }}€</li>
 
     </ul>
+
+    <h2>Actions</h2>
+    <div class="order-actions">
+      {% if not order.completed %}
+      <form method="post" action="{% url 'order:detail' order.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="mark_completed">
+        <button type="submit" class="btn btn-primary">Mark as Completed</button>
+      </form>
+      {% endif %}
+      {% if not order.delivered %}
+
+      <form method="post" action="{% url 'order:detail' order.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="mark_received">
+          <button type="submit" class="btn btn-primary">Mark as Received</button>
+      </form>
+      {% endif %}
+    </div>    
   </section>
 {% endblock %}

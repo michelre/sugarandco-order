@@ -3,8 +3,15 @@
 {% block content %}
   <h1>Order Summary</h1>
   <a href="{% url 'order:home' %}">Back to Home</a>
+
+  <form action="{% url 'order:summary' %}" method="get" class="filter-form">
+    <input type="date" name="date" value="{{ request.GET.date }}" >
+    <button type="submit">Filter</button>
+    <button type="button" onclick="window.location.href='{% url 'order:summary' %}'">Reset</button>
+  </form>
+
   <section>
-  <h2>Orders</h2>
+  <h2>Orders</h2> 
   <table>
     <thead>
       <tr>
@@ -20,7 +27,7 @@
     </thead>
     <tbody>
       {% for order in orders %}
-        <tr>
+        <tr class="{% if order.completed %}completed-order{% endif %}">
           <td>
             <a href="{% url 'order:detail' order.id %}" class="link">
               {{ order.id }}
@@ -31,22 +38,22 @@
           <td>{{ order.comments }}</td>
           <td>{{ order.deposit_amount }}€</td>          
           <td>{{ order.delivery_date|date:"d M Y" }}</td>
-          <td>{{ order.rest_to_pay }}€</td>
-          <td>{{ order.total_amount }}€</td>
+          <td>{{ order.get_rest_to_pay | floatformat:2 }}€</td>
+          <td>{{ order.total_amount | floatformat:2 }}€</td>
         </tr>
       {% endfor %}
     </tbody>
     <tfoot>
       <tr>
         <td colspan="6"><strong>Total:</strong></td>
-        <td><strong>{{ total_rest_to_pay }}€</strong></td>
-        <td><strong>{{ total_amount_orders }}€</strong></td>
+        <td><strong>{{ total_rest_to_pay | floatformat:2 }}€</strong></td>
+        <td><strong>{{ total_amount_orders | floatformat:2 }}€</strong></td>
       </tr>
     </tfoot>
   </table>
   </section>
   <section>
-  <h2>Ordered Products Summary (Buches)</h2>
+  <h2>Buches</h2>
   <table>
     <thead>
       <tr>      
@@ -60,7 +67,7 @@
         <tr>
           <td>{{ product.product__name }}</td>
           <td>{{ product.product_total_quantity }}</td>
-          <td>{{ product.product_total_amount }}€</td>
+          <td>{{ product.product_total_amount | floatformat:2 }}€</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -68,14 +75,43 @@
       <tr>
         <td><strong>Total:</strong></td>
         <td><strong>{{ buche_totals.total_quantity }}</strong></td>
-        <td><strong>{{ buche_totals.total_amount }}€</strong></td>
+        <td><strong>{{ buche_totals.total_amount | floatformat:2  }}€</strong></td>
       </tr>
     </tfoot>
   </table>
   </section>
 
   <section>
-  <h2>Ordered Products Summary (Autre)</h2>
+  <h2>Pains</h2>
+  <table>
+    <thead>
+      <tr>      
+        <th>Product Name</th>
+        <th>Total Quantity</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in ordered_products_bread %}
+        <tr>
+          <td>{{ product.product__name }}</td>
+          <td>{{ product.product_total_quantity }}</td>
+          <td>{{ product.product_total_amount | floatformat:2  }}€</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><strong>Total:</strong></td>
+        <td><strong>{{ bread_totals.total_quantity }}</strong></td>
+        <td><strong>{{ bread_totals.total_amount | floatformat:2  }}€</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+  </section>
+
+  <section>
+  <h2>Autre</h2>
   <table>
     <thead>
       <tr>      
@@ -89,7 +125,7 @@
         <tr>
           <td>{{ product.product__name }}</td>
           <td>{{ product.product_total_quantity }}</td>
-          <td>{{ product.product_total_amount }}€</td>
+          <td>{{ product.product_total_amount | floatformat:2  }}€</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -97,7 +133,7 @@
       <tr>
         <td><strong>Total:</strong></td>
         <td><strong>{{ autre_totals.total_quantity }}</strong></td>
-        <td><strong>{{ autre_totals.total_amount }}€</strong></td>
+        <td><strong>{{ autre_totals.total_amount | floatformat:2  }}€</strong></td>
       </tr>
     </tfoot>
   </table>

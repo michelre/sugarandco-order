@@ -8,16 +8,19 @@ class Order(models.Model):
     phone = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     delivery_date = models.DateField()
     comments = models.TextField(blank=True, null=True)
-    products = models.ManyToManyField('Product', through='OrderProduct')    
+    products = models.ManyToManyField('Product', through='OrderProduct') 
+    completed = models.BooleanField(default=False)
+    delivered = models.BooleanField(default=False)   
 
     def __str__(self):
         return self.name
 
     def get_rest_to_pay(self):
+        if self.delivered:
+            return 0
         return self.total_amount - self.deposit_amount
 
 class OrderProduct(models.Model):

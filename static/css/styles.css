@@ -24,7 +24,7 @@ th {
 }
 
 /* Alternate row tint */
-tr:nth-child(even) {
+tr:nth-child(even):not(.completed-order) {
     background-color: rgba(238,175,204,0.55) !important;
 }
 
@@ -200,4 +200,29 @@ a.button{
     display: block;
     width: 100%;
     font-size: 1.2rem;
+}
+
+.order-actions {
+    margin-top: 0px;
+    display: flex;
+    gap: 10px;
+}
+
+.filter-form {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    .filter-form {
+        width: 50%;
+    }
+    
+}
+
+.completed-order {
+    background-color: rgba(69,27,28,0.2) !important;
 }
