@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Order details</h1>
-  <a href="{% url 'order:summary' %}" class="link">Go back to summary</a>
+  <a href="{% url 'order:summary' %}?date={{ order.delivery_date | date:"Y-m-d" }}" class="link">Go back to summary</a>
   <section>
     <h2>Order Information</h2>
     <ul class="order-info">
