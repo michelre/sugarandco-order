@@ -47,11 +47,12 @@ class DetailView(View):
 class CreateView(View):
     def get(self, request):
         next_order_number = helpers.next_order_number_sqlite()
-        buches = Product.objects.filter(category='buche')
-        breads = Product.objects.filter(category='pain')
-        others = Product.objects.filter(category='autre')
+        categories = Product.objects.values_list('category', flat=True).distinct()
+        products_by_category = {}
+        for category in categories:
+            products_by_category[category] = Product.objects.filter(category=category)
 
-        return render(request, 'create.html', {'buches': buches, 'breads': breads, 'others': others, 'next_order_number': next_order_number })
+        return render(request, 'create.html', {'products_by_category': products_by_category, 'next_order_number': next_order_number })
 
     def post(self, request):
         # Handle form submission
@@ -86,6 +87,7 @@ class CreateView(View):
 class SummaryView(View):
     def get(self, request):
         date = request.GET.get('date')
+        remove_delivered = request.GET.get('remove_delivered')
         orders = Order.objects.all().annotate(
             total_amount=Sum(
                 ExpressionWrapper(
@@ -110,87 +112,49 @@ class SummaryView(View):
         if date:
             orders = orders.filter(delivery_date=date)
 
-        ordered_products_buche = OrderProduct.objects.filter(
-            product__category='buche'
-        ).values('product__name').annotate(
-            product_total_quantity=Sum('quantity'),
-            product_total_amount=Sum(
-            ExpressionWrapper(
-                F('quantity') * F('product__price'),
-                output_field=DecimalField(max_digits=10, decimal_places=2)
+        if remove_delivered:
+            orders = orders.exclude(delivered=True)
+
+        categories = Product.objects.values_list('category', flat=True).distinct()
+        ordered_products = {}
+
+        for category in categories:
+            ordered_products[category] = OrderProduct.objects.filter(
+                product__category=category
+            ).values('product__name').annotate(
+                product_total_quantity=Sum('quantity'),
+                product_total_amount=Sum(
+                    ExpressionWrapper(
+                        F('quantity') * F('product__price'),
+                        output_field=DecimalField(max_digits=10, decimal_places=2)
+                    )
+                )
+            ).order_by('product__name')
+
+            if date:
+                ordered_products[category] = ordered_products[category].filter(
+                    order__delivery_date=date
+                )
+            if remove_delivered:
+                ordered_products[category] = ordered_products[category].exclude(
+                    order__delivered=True
+                )
+
+        totals = {}
+
+        for category, products in ordered_products.items():
+            totals[category] = products.aggregate(
+                total_quantity=Sum('product_total_quantity'),
+                total_amount=Sum('product_total_amount')
             )
-            ),
-        ).order_by('product__name')
-
-        if date:
-            ordered_products_buche = ordered_products_buche.filter(
-                order__delivery_date=date
-            )
-
-        ordered_products_bread = OrderProduct.objects.filter(
-            product__category='pain'
-        ).values('product__name').annotate(
-            product_total_quantity=Sum('quantity'),
-            product_total_amount=Sum(
-            ExpressionWrapper(
-                F('quantity') * F('product__price'),
-                output_field=DecimalField(max_digits=10, decimal_places=2)
-            )
-            ),
-        ).order_by('product__name')
-
-        if date:
-            ordered_products_bread = ordered_products_bread.filter(
-                order__delivery_date=date
-            )
-
-        ordered_products_other = OrderProduct.objects.filter(
-            product__category='autre'
-        ).values('product__name').annotate(
-            product_total_quantity=Sum('quantity'),
-            product_total_amount=Sum(
-            ExpressionWrapper(
-                F('quantity') * F('product__price'),
-                output_field=DecimalField(max_digits=10, decimal_places=2)
-            )
-            ),
-        ).order_by('product__name')
-
-        if date:
-            ordered_products_other = ordered_products_other.filter(
-                order__delivery_date=date
-            )
-
-    
-        # Totaux globaux pour la catégorie buche
-        buche_totals = ordered_products_buche.aggregate(
-            total_quantity=Sum('product_total_quantity'),
-            total_amount=Sum('product_total_amount')
-        )
-
-        # Totaux globaux pour la catégorie buche
-        bread_totals = ordered_products_bread.aggregate(
-            total_quantity=Sum('product_total_quantity'),
-            total_amount=Sum('product_total_amount')
-        )
-
-        # Totaux globaux pour la catégorie autre
-        autre_totals = ordered_products_other.aggregate(
-            total_quantity=Sum('product_total_quantity'),
-            total_amount=Sum('product_total_amount')
-        )
 
         return render(
             request,
             'summary.html',
             {
                 'orders': orders,
-                'ordered_products_buche': ordered_products_buche,
-                'buche_totals': buche_totals,
-                'ordered_products_bread': ordered_products_bread,
-                'bread_totals': bread_totals,
-                'ordered_products_other': ordered_products_other,
-                'autre_totals': autre_totals,                
+                'totals': totals,
+                'ordered_products': ordered_products,        
                 'total_rest_to_pay': orders.aggregate(Sum('rest_to_pay'))['rest_to_pay__sum'] or 0,
                 'total_amount_orders': orders.aggregate(Sum('total_amount'))['total_amount__sum'] or 0,                
             }

@@ -216,6 +216,19 @@ a.button{
     width: 100%;
 }
 
+label[for="remove_delivered"] {
+    margin-left: 5px;
+    display: block;
+    width: auto;
+    margin-right: 5px;
+}
+
+
+input#remove_delivered {
+    width: auto;
+    display: block;
+}
+
 @media screen and (min-width: 768px) {
     .filter-form {
         width: 50%;

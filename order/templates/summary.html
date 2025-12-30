@@ -6,6 +6,8 @@
 
   <form action="{% url 'order:summary' %}" method="get" class="filter-form">
     <input type="date" name="date" value="{{ request.GET.date }}" >
+    <label for="remove_delivered">Remove Delivered:</label>
+    <input id="remove_delivered" type="checkbox" name="remove_delivered" {% if request.GET.remove_delivered %}checked{% endif %}>
     <button type="submit">Filter</button>
     <button type="button" onclick="window.location.href='{% url 'order:summary' %}'">Reset</button>
   </form>
@@ -52,92 +54,45 @@
     </tfoot>
   </table>
   </section>
-  <section>
-  <h2>Buches</h2>
-  <table>
-    <thead>
-      <tr>      
-        <th>Product Name</th>
-        <th>Total Quantity</th>
-        <th>Total Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in ordered_products_buche %}
-        <tr>
-          <td>{{ product.product__name }}</td>
-          <td>{{ product.product_total_quantity }}</td>
-          <td>{{ product.product_total_amount | floatformat:2 }}€</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-    <tfoot>
-      <tr>
-        <td><strong>Total:</strong></td>
-        <td><strong>{{ buche_totals.total_quantity }}</strong></td>
-        <td><strong>{{ buche_totals.total_amount | floatformat:2  }}€</strong></td>
-      </tr>
-    </tfoot>
-  </table>
-  </section>
 
-  <section>
-  <h2>Pains</h2>
-  <table>
-    <thead>
-      <tr>      
-        <th>Product Name</th>
-        <th>Total Quantity</th>
-        <th>Total Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in ordered_products_bread %}
-        <tr>
-          <td>{{ product.product__name }}</td>
-          <td>{{ product.product_total_quantity }}</td>
-          <td>{{ product.product_total_amount | floatformat:2  }}€</td>
-        </tr>
-      {% endfor %}
+  {% for category, products in ordered_products.items %}
+  {% if products %} 
+    <section>
+      <h2>{{ category|title }}</h2>
+      <table>
+        <thead>
+          <tr>      
+            <th>Product Name</th>
+            <th>Total Quantity</th>
+            <th>Total Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+            <tr>
+              <td>{{ product.product__name }}</td>
+              <td>{{ product.product_total_quantity }}</td>
+              <td>{{ product.product_total_amount | floatformat:2 }}€</td>
+            </tr>
+          {% endfor %}
     </tbody>
     <tfoot>
-      <tr>
-        <td><strong>Total:</strong></td>
-        <td><strong>{{ bread_totals.total_quantity }}</strong></td>
-        <td><strong>{{ bread_totals.total_amount | floatformat:2  }}€</strong></td>
-      </tr>
+      {% for cat, totals in totals.items %}  
+      {% if cat == category %}
+        <tr>
+          <td><strong>Total: </strong></td>
+          <td><strong>{{ totals.total_quantity }}</strong></td>
+          <td><strong>{{ totals.total_amount | floatformat:2  }}€</strong></td>
+        </tr>
+      {% endif %}
+      {% endfor %}
+      
     </tfoot>
   </table>
   </section>
+  {% endif %}
+  {% endfor %}
 
-  <section>
-  <h2>Autre</h2>
-  <table>
-    <thead>
-      <tr>      
-        <th>Product Name</th>
-        <th>Total Quantity</th>
-        <th>Total Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in ordered_products_other %}
-        <tr>
-          <td>{{ product.product__name }}</td>
-          <td>{{ product.product_total_quantity }}</td>
-          <td>{{ product.product_total_amount | floatformat:2  }}€</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-    <tfoot>
-      <tr>
-        <td><strong>Total:</strong></td>
-        <td><strong>{{ autre_totals.total_quantity }}</strong></td>
-        <td><strong>{{ autre_totals.total_amount | floatformat:2  }}€</strong></td>
-      </tr>
-    </tfoot>
-  </table>
-  </section>
 
   
 {% endblock %}

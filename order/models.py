@@ -42,7 +42,10 @@ class Product(models.Model):
             ('buche', 'Buche'),
             ('pain', 'Pain'),
             ('autre', 'Autre'),
-        ], max_length=20, default='buche'
+            ('patisserie', 'Pâtisserie'),
+            ('viennoiserie', 'Viennoiserie'),
+            ('galette', 'Galette'),
+        ], max_length=20, default='autre'
     )
 
     def __str__(self):
