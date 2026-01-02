@@ -216,6 +216,10 @@ a.button{
     width: 100%;
 }
 
+.filter-form input[type="date"] {
+    max-width: 50%;
+}
+
 label[for="remove_delivered"] {
     margin-left: 5px;
     display: block;
@@ -227,13 +231,6 @@ label[for="remove_delivered"] {
 input#remove_delivered {
     width: auto;
     display: block;
-}
-
-@media screen and (min-width: 768px) {
-    .filter-form {
-        width: 50%;
-    }
-    
 }
 
 .completed-order {

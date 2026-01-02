@@ -54,7 +54,7 @@
 
     <div class="form-group">
       <label for="delivery_date">Delivery Date:</label>
-      <input type="date" id="delivery_date" name="delivery_date" value="2025-12-24" required>
+      <input type="date" id="delivery_date" name="delivery_date" value="{% now "Y-m-d" %}" required>
     </div>
 
     <button type="submit">Create Order</button>
